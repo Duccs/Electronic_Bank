@@ -20,10 +20,45 @@ namespace Electronic_Bank.Controllers
         }
 
         // GET: Currencies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-              return _context.Currency != null ? 
-                          View(await _context.Currency.ToListAsync()) :
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.ValueSortParm = sortOrder == "Value" ? "value_desc" : "Value";
+            ViewBag.CodeSortParm = sortOrder == "Code" ? "code_desc" : "Code";
+            var currencies = from s in _context.Currency
+                           select s;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    currencies = currencies.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    currencies = currencies.OrderBy(s => s.ValuetoUSD);
+                    break;
+                case "date_desc":
+                    currencies = currencies.OrderByDescending(s => s.ValuetoUSD);
+                    break;
+                case "Code":
+                    currencies = currencies.OrderBy(s => s.Code);
+                    break;
+                case "code_desc":
+                    currencies = currencies.OrderByDescending(s => s.Code);
+                    break;
+                default:
+                    currencies = currencies.OrderBy(s => s.Name);
+                    break;
+            }
+
+            var currency = currencies.ToList();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                //movies = movies.Where(s => s.Title!.Contains(searchString));
+                currency = currency.FindAll(m => m.Name!.Contains(searchString));
+
+            }
+            return _context.Currency != null ? 
+                          View(currency) :
                           Problem("Entity set 'ApplicationDbContext.Currency'  is null.");
         }
 

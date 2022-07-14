@@ -23,10 +23,18 @@ namespace Electronic_Bank.Controllers
         }
 
         // GET: Clients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-              return _context.Client != null ? 
-                          View(await _context.Client.ToListAsync()) :
+            var clients = _context.Client.ToList();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                //movies = movies.Where(s => s.Title!.Contains(searchString));
+                clients = clients.FindAll(m => m.Name!.Contains(searchString));
+
+            }
+            return _context.Client != null ? 
+                          View(clients) :
                           Problem("Entity set 'ApplicationDbContext.Client'  is null.");
         }
 
@@ -103,8 +111,6 @@ namespace Electronic_Bank.Controllers
                 return NotFound();
             }
 
-            string oldPath = _context.Client.FirstOrDefault(c => c.Id == id).ImagePath;
-
             try
             {
                 if (client.Image != null)
@@ -114,11 +120,6 @@ namespace Electronic_Bank.Controllers
                     string ImageFolder = Path.Combine(hosting.WebRootPath, "imgs");
                     string ImagePath = Path.Combine(ImageFolder, client.Image.FileName);
                     client.Image.CopyTo(new FileStream(ImagePath, FileMode.Create));
-                    FileInfo file = new FileInfo(Path.Combine(ImageFolder, oldPath));
-                    if (file.Exists)//check file exsit or not  
-                    {
-                        file.Delete();
-                    }
                     client.ImagePath = client.Image.FileName;
 
                 }

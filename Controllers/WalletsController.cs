@@ -20,10 +20,18 @@ namespace Electronic_Bank.Controllers
         }
 
         // GET: Wallets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Wallet.Include(w => w.Client).Include(w => w.Currency);
-            return View(await applicationDbContext.ToListAsync());
+
+            var applicationDbContext = _context.Wallet.Include(w => w.Client).Include(w => w.Currency).ToList();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                //movies = movies.Where(s => s.Title!.Contains(searchString));
+                applicationDbContext = applicationDbContext.FindAll(m => m.Client.Name!.Contains(searchString));
+
+            }
+            return View(applicationDbContext);
         }
 
         // GET: Wallets/Details/5
