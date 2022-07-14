@@ -1,0 +1,38 @@
+﻿@model Electronic_Bank.Models.TransferViewModel
+
+@{
+    ViewData["Title"] = "Deposit";
+}
+
+<h1>Deposit</h1>
+
+<h4>Wallet</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Transfer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <label asp-for="target" class="control-label"></label>
+                <select asp-for="target" class="form-control" asp-items="ViewBag.TargetWallet"></select>
+                <span asp-validation-for="target" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="amount" class="control-label"></label>
+                <input asp-for="amount" class="form-control" />
+                <span asp-validation-for="amount" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,40 @@
+﻿@model Electronic_Bank.Models.Wallet
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="col-md-6 grid-margin stretch-card">
+<div class="card">
+<div class="card-body">
+
+    <h4 class="card-title">Details</h4>
+    <div>
+    <h4>Wallet</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Client)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Client.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Currency)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Currency.Name)
+        </dd>
+    </dl>
+    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a class="btn btn-light" asp-action="Index">Back to List</a>
+</div>
+</div>
+</div>
+</div>

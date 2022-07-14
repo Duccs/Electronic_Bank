@@ -1,0 +1,47 @@
+﻿@model Electronic_Bank.Models.Wallet
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="col-md-6 grid-margin stretch-card">
+<div class="card">
+<div class="card-body">
+
+    <h4 class="card-title">Delete</h4>
+
+    <p class="card-description">Are you sure you want to delete this?</p>
+
+    <div>
+    <h4>Wallet</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Client)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Client.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Currency)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Currency.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a class="btn btn-light" asp-action="Index">Cancel</a>
+    </form>
+</div>
+</div>
+</div>
+</div>
