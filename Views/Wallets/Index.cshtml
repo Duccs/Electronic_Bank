@@ -23,13 +23,13 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Client)
+                        @Html.ActionLink("Client", "Index", new { sortOrder = ViewBag.ClientSortParm })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Amount)
+                        @Html.ActionLink("Amount", "Index", new { sortOrder = ViewBag.AmountSortParm })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Currency)
+                        @Html.ActionLink("Currency", "Index", new { sortOrder = ViewBag.CurrencySortParm })
                     </th>
                     <th></th>
                 </tr>

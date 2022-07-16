@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Electronic_Bank.Data;
 using Electronic_Bank.Models;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using PagedList;
 
 namespace Electronic_Bank.Controllers
 {
@@ -23,19 +24,62 @@ namespace Electronic_Bank.Controllers
         }
 
         // GET: Clients
-        public async Task<IActionResult> Index(string searchString)
+        public ViewResult Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
-            var clients = _context.Client.ToList();
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.AddressSortParm = sortOrder == "Address" ? "address_desc" : "Address";
+            ViewBag.PhoneSortParm = sortOrder == "Phone" ? "phone_desc" : "Phone";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var clients = from s in _context.Client
+                          select s;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    clients = clients.OrderByDescending(s => s.Name);
+                    break;
+                case "Address":
+                    clients = clients.OrderBy(s => s.Address);
+                    break;
+                case "address_desc":
+                    clients = clients.OrderByDescending(s => s.Address);
+                    break;
+                case "Phone":
+                    clients = clients.OrderBy(s => s.Phone);
+                    break;
+                case "phone_desc":
+                    clients = clients.OrderByDescending(s => s.Phone);
+                    break;
+                default:
+                    clients = clients.OrderBy(s => s.Name);
+                    break;
+            }
+
+            var list = clients.ToList();
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 //movies = movies.Where(s => s.Title!.Contains(searchString));
-                clients = clients.FindAll(m => m.Name!.Contains(searchString));
+                list = list.FindAll(m => m.Name!.Contains(searchString));
 
             }
-            return _context.Client != null ? 
-                          View(clients) :
-                          Problem("Entity set 'ApplicationDbContext.Client'  is null.");
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(list.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Clients/Details/5

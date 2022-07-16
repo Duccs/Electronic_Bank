@@ -20,18 +20,45 @@ namespace Electronic_Bank.Controllers
         }
 
         // GET: Wallets
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
+            ViewBag.ClientSortParm = String.IsNullOrEmpty(sortOrder) ? "client_desc" : "";
+            ViewBag.AmountSortParm = sortOrder == "Amount" ? "amount_desc" : "Amount";
+            ViewBag.CurrencySortParm = sortOrder == "Currency" ? "currency_desc" : "Currency";
+            var applicationDbContext = from s in _context.Wallet.Include(w => w.Client).Include(w => w.Currency)
+                                       select s;
 
-            var applicationDbContext = _context.Wallet.Include(w => w.Client).Include(w => w.Currency).ToList();
+            switch (sortOrder)
+            {
+                case "client_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(s => s.Client.Name);
+                    break;
+                case "Amount":
+                    applicationDbContext = applicationDbContext.OrderBy(s => s.Amount);
+                    break;
+                case "amount_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(s => s.Amount);
+                    break;
+                case "Currency":
+                    applicationDbContext = applicationDbContext.OrderBy(s => s.Currency.Code);
+                    break;
+                case "currency_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(s => s.Currency.Code);
+                    break;
+                default:
+                    applicationDbContext = applicationDbContext.OrderBy(s => s.Client.Name);
+                    break;
+            }
+
+            var wallets = applicationDbContext.ToList();
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 //movies = movies.Where(s => s.Title!.Contains(searchString));
-                applicationDbContext = applicationDbContext.FindAll(m => m.Client.Name!.Contains(searchString));
+                wallets = wallets.FindAll(m => m.Client.Name!.Contains(searchString));
 
             }
-            return View(applicationDbContext);
+            return View(wallets);
         }
 
         // GET: Wallets/Details/5

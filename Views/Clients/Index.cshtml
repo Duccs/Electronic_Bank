@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Electronic_Bank.Models.Client>
-
+﻿@model IPagedList<Electronic_Bank.Models.Client>
+@using PagedList
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clients";
 }
 <div class="col-lg-12 grid-margin stretch-card">
 <div class="card">
@@ -10,12 +12,14 @@
         <br />
         <p>
             <a class="btn btn-secondary btn-rounded btn-fw" asp-action="Create">Create New</a>
-            <form asp-controller="Clients" asp-action="Index" method="get" class="d-flex">
-            <p>
-                <input type="text" name="searchString" placeholder="Search Name" class="form-control me-sm-2"/>
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </p>
-            </form>
+                @using (Html.BeginForm("Index", "Clients", FormMethod.Get))
+                {
+                    <p>
+                        <input type="text" name="searchString" placeholder="@ViewBag.CurrentFilter as string" class="form-control me-sm-2"/>
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </p>
+                }
+            
             
         </p>
 
@@ -23,16 +27,15 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Image)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Name)
+                        @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th>    
-                        @Html.DisplayNameFor(model => model.Address)
+                        @Html.ActionLink("Address", "Index", new { sortOrder = ViewBag.AddressSortParm, currentFilter = ViewBag.CurrentFilter})
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Phone)
+                        @Html.ActionLink("Phone", "Index", new { sortOrder = ViewBag.PhoneSortParm, currentFilter = ViewBag.CurrentFilter })
                     </th>
                     <th></th>
                 </tr>
@@ -61,6 +64,12 @@
         }
             </tbody>
         </table>
+        <br />
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @*@Html.PagedListPager(Model, page => Url.Action("Index", 
+            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@
+
     </div>
 </div>
 </div>
