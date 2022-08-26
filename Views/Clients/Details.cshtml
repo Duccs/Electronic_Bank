@@ -61,23 +61,26 @@
             var wallets = (List<Wallet>) ViewData["Wallets"];
         }
         @foreach(var w in @wallets){
-            <div class="card text-white bg-primary border-light mb-3" style="max-width: 20rem;margin-bottom:10px; margin-right:10px">
+            <div class="card mb-3" style="max-width: 20rem;margin-bottom:10px; margin-right:10px; background-color:#ff7043; border-radius:3%;">
               <div class="card-header">Wallet No.@i</div>
               <div class="card-body">
-                <h4 class="card-title"><i class="fa-solid fa-wallet"></i> @w.Currency.Code</h4>
-                <p class="card-text"><i tyle="color:white" class="fa-solid fa-money-bills"></i> @w.Amount</p>
-                <a asp-controller="Wallets" asp-action="Edit" asp-route-id="@w.Id"><i style="color:white" class="fas fa-edit"></i></a> |
-                <a asp-controller="Wallets" asp-action="Details" asp-route-id="@w.Id"><i style="color:white" class="fas fa-info-circle"></i></a> |
-                <a asp-controller="Wallets" asp-action="Delete" asp-route-id="@w.Id"><i style="color:white" class="fas fa-trash"></i></a>
+                <h4 class="card-title" ><i class="fa-solid fa-wallet"></i> @w.Currency.Code</h4>
+                <p class="card-text" style="color:#4a4a4a"><i class="fa-solid fa-money-bills"></i> @w.Amount</p>
+                <a asp-controller="Wallets" asp-action="Edit" asp-route-id="@w.Id"><i style="color:#4a4a4a" class="fas fa-edit"></i></a> |
+                <a asp-controller="Wallets" asp-action="Details" asp-route-id="@w.Id"><i style="color:#4a4a4a" class="fas fa-info-circle"></i></a> |
+                <a asp-controller="Wallets" asp-action="Delete" asp-route-id="@w.Id"><i style="color:#4a4a4a" class="fas fa-trash"></i></a>
                 <br>
                 <br>
-                <a class="card-text" style="color:white" asp-controller="Wallets" asp-action="Deposit" asp-route-id="@w.Id">Deposit</a> |
-                <a class="card-text" style="color:white" asp-controller="Wallets" asp-action="Withdraw" asp-route-id="@w.Id">Withdraw</a> |
-                <a class="card-text" style="color:white" asp-controller="Wallets" asp-action="Transfer" asp-route-id="@w.Id">Transfer</a>
+                <a class="card-text" style="color:#4a4a4a" asp-controller="Wallets" asp-action="Deposit" asp-route-id="@w.Id">Deposit</a> |
+                <a class="card-text" style="color:#4a4a4a" asp-controller="Wallets" asp-action="Withdraw" asp-route-id="@w.Id">Withdraw</a> |
+                <a class="card-text" style="color:#4a4a4a" asp-controller="Wallets" asp-action="Transfer" asp-route-id="@w.Id">Transfer</a>
               </div>
         </div>
         i++;
     }
+    <br />
+    <br />
+    <br />
 </div>
     <a class="btn btn-warning" asp-controller="Wallets" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a class="btn btn-light" asp-action="Index">Back to List</a>

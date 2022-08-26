@@ -1,4 +1,5 @@
-﻿using Electronic_Bank.Models;
+﻿using Electronic_Bank.Data;
+using Electronic_Bank.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,14 +8,20 @@ namespace Electronic_Bank.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
+            ViewData["ClientCount"] = _context.Client.Count();
+            ViewData["WalletCount"] = _context.Wallet.Count();
+            ViewData["TransactionCount"] = _context.Transaction.Count();
+            ViewData["CurrencyCount"] = _context.Currency.Count();
             return View();
         }
 

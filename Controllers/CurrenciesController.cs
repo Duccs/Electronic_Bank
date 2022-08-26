@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Electronic_Bank.Data;
 using Electronic_Bank.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Electronic_Bank.Controllers
 {
+    [Authorize]
     public class CurrenciesController : Controller
     {
         private readonly ApplicationDbContext _context;

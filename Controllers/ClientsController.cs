@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Electronic_Bank.Data;
 using Electronic_Bank.Models;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
-using PagedList;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Electronic_Bank.Controllers
 {
+    [Authorize]
     public class ClientsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,24 +23,13 @@ namespace Electronic_Bank.Controllers
             this.hosting = hosting;
         }
 
+        
         // GET: Clients
-        public ViewResult Index(string sortOrder, string searchString, string currentFilter, int? page)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.AddressSortParm = sortOrder == "Address" ? "address_desc" : "Address";
             ViewBag.PhoneSortParm = sortOrder == "Phone" ? "phone_desc" : "Phone";
-
-            if (searchString != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            ViewBag.CurrentFilter = searchString;
 
             var clients = from s in _context.Client
                           select s;
@@ -66,20 +55,18 @@ namespace Electronic_Bank.Controllers
                     clients = clients.OrderBy(s => s.Name);
                     break;
             }
-
-            var list = clients.ToList();
+            var currency = clients.ToList();
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 //movies = movies.Where(s => s.Title!.Contains(searchString));
-                list = list.FindAll(m => m.Name!.Contains(searchString));
+                currency = currency.FindAll(m => m.Name!.Contains(searchString));
 
             }
 
-            int pageSize = 3;
-            int pageNumber = (page ?? 1);
-
-            return View(list.ToPagedList(pageNumber, pageSize));
+            return _context.Client != null ?
+                          View(currency) :
+                          Problem("Entity set 'ApplicationDbContext.Client'  is null.");
         }
 
         // GET: Clients/Details/5
